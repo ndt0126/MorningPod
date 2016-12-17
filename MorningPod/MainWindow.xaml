@@ -1,0 +1,149 @@
+﻿<Window x:Class="MorningPod.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:viewModels="clr-namespace:MorningPod.ViewModels"
+        xmlns:models="clr-namespace:MorningPod.Models"
+        xmlns:mp="clr-namespace:MorningPod"
+        xmlns:commands="clr-namespace:MorningPod.Commands"
+        xmlns:utl="clr-namespace:MorningPod.Ultilities"
+
+        WindowState="Maximized"
+        Title="MorningPod"
+        Icon="Resources/RSS Feed.ico"
+        
+        
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        mc:Ignorable="d" 
+        d:DataContext="{d:DesignInstance viewModels:ViewModel, IsDesignTimeCreatable=True}"
+        >
+
+    <!--<Window.InputBindings>
+        <KeyBinding Command="commands:MPCommands.SkipBackward" Key="Left" />
+        <KeyBinding Command="commands:MPCommands.SkipForward" Key="Right" />
+    </Window.InputBindings>-->
+
+    <!--<Window.DataContext>
+        <viewModels:ViewModel x:Name="ViewModel" />
+    </Window.DataContext>-->
+    
+    
+    <Grid>
+        
+        <Grid.ColumnDefinitions> <ColumnDefinition Width="Auto" /> <ColumnDefinition Width="5" /> <ColumnDefinition Width="*" /> </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions> <RowDefinition Height="Auto" /> <RowDefinition Height="*" /> <RowDefinition Height="140" /> </Grid.RowDefinitions>
+
+        
+        <mp:ScheduleUC Grid.Row="0" Grid.Column="0" x:Name="ScheUc" Width="Auto" Margin="0 0 0 10" DataContext="ViewModel" />
+
+
+        <ListBox x:Name="LBPods" Grid.Row="1"  Grid.RowSpan="2" Grid.Column="0" MinWidth="333" 
+                 SelectionChanged="LBPods_OnSelectionChanged" 
+                 ItemsSource="{Binding Pods}" 
+                 SelectedItem="{Binding CurPod, Mode=TwoWay}" 
+                 BorderBrush="{Binding CurState, Converter={x:Static utl:StateToSCB.Get}}">
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type models:Pod}" >
+                    <Grid VerticalAlignment="Center" Height="53" >
+                        <Image Source="{Binding ImgPath}" HorizontalAlignment="Left" Margin="5" />
+                        <TextBlock Text="{Binding Title}" Margin="60 0 30 0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="13" FontWeight="SemiBold" Height="Auto" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <GridSplitter Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Background="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+
+        <ListBox x:Name="DGEpis" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" HorizontalContentAlignment="Stretch" BorderThickness="0" Background="White"
+                 ItemsSource="{Binding CurEpis}" SelectionChanged="DGEpis_OnSelectionChanged" SelectedItem="{Binding CurEpi, Mode=TwoWay}"
+                 >
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type models:Epi}" >
+                    <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="33" 
+                               Background="{Binding IsPlaying, Converter={x:Static utl:BoolToggleLightGrayWhite.Get}, ConverterParameter=0.2}" >
+                        
+                        <Canvas         Width="180" Name="Canvas" ClipToBounds="True" DockPanel.Dock="Left" >
+                                        <Rectangle     Margin="0 0 99 0"
+                                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="UniformToFill"
+                                                       Width="{Binding ElementName=Canvas, Path=ActualWidth, Converter={x:Static utl:DoubleMinus5.Get}}" 
+                                                       Fill="{Binding PodColors, Converter={x:Static utl:ColorsToGradientSolid.Get}}" />
+
+
+                                        <Border BorderThickness="0 0 4 0" 
+                                                        Width="{Binding ElementName=Canvas, Path=ActualWidth}" 
+                                                        Height="{Binding ElementName=Canvas, Path=ActualHeight}"
+                                                        BorderBrush="{Binding IsDLed, Converter={x:Static utl:BoolToggleGreenWhite.Get}}" >
+                                                        <Border.Background> <SolidColorBrush Color="Black" Opacity="0.6" /> </Border.Background> </Border>
+                                                <ProgressBar BorderThickness="4 0 0 0" BorderBrush="MediumSeaGreen" HorizontalAlignment="Stretch" 
+                                                             Value="{Binding DLPerc}" 
+                                                             Width="{Binding ElementName=Canvas, Path=ActualWidth}"
+                                                             Height="{Binding ElementName=Canvas, Path=ActualHeight}"
+                                                             Visibility="{Binding IsDLingOrInQueue, Converter={x:Static utl:vals.BoolToVis}}" 
+                                                             Background="{Binding IsDLed, Converter={x:Static utl:BoolToggleGreenTrans.Get}}" />
+                                                <TextBlock Foreground="White" Margin="15 8 0 0" TextAlignment="Left" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                                   Text="{Binding PodTitle}" 
+                                                   Width="{Binding ElementName=Canvas, Path=ActualWidth}" />
+                        </Canvas>
+                        
+                        <TextBlock      Width="50" TextAlignment="Right" HorizontalAlignment="Right" DockPanel.Dock="Left" VerticalAlignment="Center"
+                                        Text="{Binding SDuration}" />
+
+                        <TextBlock      Width="44" FontSize="15" TextAlignment="Center" HorizontalAlignment="Center" DockPanel.Dock="Left" VerticalAlignment="Center"
+                                        Text="{Binding PC}" 
+                                        FontWeight="{Binding PC, Converter={x:Static utl:IntLessOneToggleBold.Get}}" 
+                                        Foreground="{Binding PC, Converter={x:Static utl:IntLessOneToggleSCB.Get}}" 
+                                        Visibility="{Binding IsDLed, Converter={x:Static utl:BoolToggleVisH.Get}}" />
+
+                        <TextBlock      Width="120" TextAlignment="Right" HorizontalAlignment="Right" DockPanel.Dock="Right" VerticalAlignment="Center"
+                                        Text="{Binding PubDate, StringFormat={x:Static utl:vals.DateStringFormat}}" />
+
+                        <TextBlock      Width="Auto" TextAlignment="Left" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                        Text="{Binding Title}" 
+                                        FontWeight="{Binding IsPlaying, Converter={x:Static utl:BoolToggleSemiBold.Get}}"
+                                        Foreground="{Binding HasError, Converter={x:Static utl:BoolToggleGrayBlack.Get}}"
+                                        />
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Delete local file" Command="Delete" CommandParameter="delEpi" />
+                    <MenuItem Header="Download Episode" Command="commands:MPCommands.DownloadEpi" />
+                    <MenuItem Header="Show local file" Command="commands:MPCommands.ShowEpi" />
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
+
+
+
+        <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" x:Name="DBGr" Visibility="Hidden" >
+            <Grid.ColumnDefinitions> <ColumnDefinition Width="*" /> <ColumnDefinition Width="*" /> <ColumnDefinition Width="*" /> </Grid.ColumnDefinitions>
+            <ScrollViewer Grid.ColumnSpan="3" Background="DarkSlateGray" Margin="0 0 0 40" >
+                <TextBlock x:Name="DBTxt" Foreground="LightGray" Text="{Binding VMLog}" />
+            </ScrollViewer>
+            <Button Grid.Column="0" Height="40" VerticalAlignment="Bottom" x:Name="ButtUpdate" Content="Update" />
+            <Button Grid.Column="1" Height="40" VerticalAlignment="Bottom" x:Name="ButtUpdateAll" Content="Update all" />
+            <Button Grid.Column="2" Height="40" VerticalAlignment="Bottom" x:Name="ButtPlayAll" Content="Play all" />
+        </Grid>
+        
+
+
+        <mp:MediaUC Grid.Row="2" Grid.Column="2" x:Name="MediaUc" DataContext="ViewModel" Margin="5 4 4 0" />
+
+
+
+            <!--<StackPanel Grid.ColumnSpan="2" Grid.RowSpan="2" Orientation="Horizontal" >
+            <ListBox Name="a1" Width="222" > <ListBox.ItemTemplate> <DataTemplate> <Grid Loaded="asdfasdfasdfasdf" Background="White" Margin="5" MinWidth="44" MinHeight="44" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" /> </DataTemplate> </ListBox.ItemTemplate> </ListBox>
+            <ListBox Name="a2" Width="222"> <ListBox.ItemTemplate> <DataTemplate> <Grid Loaded="asdfasdfasdfasdf" Background="White" Margin="5" MinWidth="44" MinHeight="44" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" /> </DataTemplate> </ListBox.ItemTemplate> </ListBox>
+            <ListBox Name="a3" Width="222"> <ListBox.ItemTemplate> <DataTemplate> <Grid Loaded="asdfasdfasdfasdf" Background="White" Margin="5" MinWidth="44" MinHeight="44" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" /> </DataTemplate> </ListBox.ItemTemplate> </ListBox>
+            <ListBox Name="a4" Width="222"> <ListBox.ItemTemplate> <DataTemplate> <Grid Loaded="asdfasdfasdfasdf" Background="White" Margin="5" MinWidth="44" MinHeight="44" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" /> </DataTemplate> </ListBox.ItemTemplate> </ListBox>
+            <ListBox Name="a5" Width="222"> <ListBox.ItemTemplate> <DataTemplate> <Grid Loaded="asdfasdfasdfasdf" Background="White" Margin="5" MinWidth="44" MinHeight="44" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" /> </DataTemplate> </ListBox.ItemTemplate> </ListBox>
+        </StackPanel>-->
+        
+        
+        
+    </Grid>
+    
+    
+</Window>

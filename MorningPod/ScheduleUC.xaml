@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="MorningPod.ScheduleUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:DANK="clr-namespace:MorningPod.Models"
+             xmlns:commands="clr-namespace:MorningPod.Commands"
+             xmlns:ultilities="clr-namespace:MorningPod.Ultilities"
+             xmlns:CusUI="clr-namespace:MorningPod.CustomUI"
+             mc:Ignorable="d" Width="Auto"
+             Name="Self"
+             d:DataContext="{d:DesignInstance DANK:MPConf, IsDesignTimeCreatable=True}">
+
+    <Grid ClipToBounds="True" Margin="10" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        
+        <TextBlock  Grid.Column="0" Grid.Row="0" FontSize="9" FontWeight="SemiBold" Margin="0 2 0 2"
+                    Text="Last update" />
+        <TextBlock  Grid.Column="2" Grid.Row="0" FontSize="9" FontWeight="SemiBold" Margin="0 2 0 2"
+                    Text="Last wake" />
+        <Button Grid.Column="0" Grid.Row="1" IsEnabled="False" BorderThickness="0"
+                Content="{Binding LastUpdate, Converter={x:Static ultilities:DatetimeToStringMed.Get}}" />
+        <Button Grid.Column="2" Grid.Row="1" IsEnabled="False" BorderThickness="0"
+                Content="{Binding LastWake, Converter={x:Static ultilities:DatetimeToStringMed.Get}}" />
+
+
+        <TextBlock  Grid.Column="0" Grid.Row="3" FontSize="9" FontWeight="SemiBold" Margin="0 2 0 2"
+                    Text="Next update" />
+        <TextBlock  Grid.Column="2" Grid.Row="3" FontSize="9" FontWeight="SemiBold" Margin="0 2 0 2"
+                    Text="Next wake" />
+        <Button Grid.Column="0" Grid.Row="4" 
+                Content="{Binding NextUpdate, Converter={x:Static CusUI:TimeHeavyDateTimeButton.Get}}" 
+                Command="{Binding ElementName=Self, Path=PickUpdateTime }" />
+        <Button Grid.Column="2" Grid.Row="4" 
+                Content="{Binding NextWake, Converter={x:Static CusUI:TimeHeavyDateTimeButton.Get}}" 
+                Command="{Binding ElementName=Self, Path=PickWakeTime }" />
+
+
+    </Grid>
+</UserControl>

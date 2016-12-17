@@ -1,0 +1,56 @@
+﻿<Window x:Class="MorningPod.PickTimeDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MorningPod"
+        xmlns:viewModels="clr-namespace:MorningPod.ViewModels"
+        xmlns:commands="clr-namespace:MorningPod.Commands"
+        mc:Ignorable="d" Name="Window"
+        Title="PickTimeDialog" Height="Auto" Width="Auto" SizeToContent="WidthAndHeight" ResizeMode="NoResize" >
+    
+    <Window.DataContext> 
+        <viewModels:PickTimeDialogVM x:Name="Vm" />
+    </Window.DataContext>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="150" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="55" />
+            <RowDefinition Height="55" />
+            <RowDefinition Height="55" />
+        </Grid.RowDefinitions>
+
+
+
+        <TextBlock  Grid.Column="0" Grid.Row="0" FontSize="9" FontWeight="SemiBold" Margin="0 2 0 2"  TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Text="Hour" />
+        <TextBlock  Grid.Column="1" Grid.Row="0" FontSize="9" FontWeight="SemiBold" Margin="0 2 0 2"  TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Text="Minutes" />
+
+
+        <Button Grid.Column="0" Grid.Row="1" Name="ButtAddHour" Content="+" FontSize="33" FontWeight="ExtraLight" BorderThickness="0" Background="White" Command="{Binding AddHour}" />
+        <Button Grid.Column="1" Grid.Row="1" Content="+" FontSize="33" FontWeight="ExtraLight" BorderThickness="0" Background="White" Command="{Binding AddMinute}" />
+
+
+        <TextBlock Grid.Column="0" Grid.Row="2" FontSize="33" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Text="{Binding Hours}" />
+        <TextBlock Grid.Column="1" Grid.Row="2" FontSize="33" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                   Text="{Binding Mins}" />
+
+
+        <Button Grid.Column="0" Grid.Row="3" Content="-" FontSize="33" FontWeight="ExtraLight" BorderThickness="0" Background="White" Command="{Binding SubHour}" />
+        <Button Grid.Column="1" Grid.Row="3" Content="-" FontSize="33" FontWeight="ExtraLight" BorderThickness="0" Background="White" Command="{Binding SubMinute}" />
+
+
+        <Button Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" Content="✓" FontSize="55" FontWeight="ExtraLight" BorderThickness="0" Background="White" Click="Done" />
+
+
+
+    </Grid>
+</Window>

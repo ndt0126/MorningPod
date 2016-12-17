@@ -1,0 +1,100 @@
+﻿<UserControl x:Class="MorningPod.MediaUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:win="clr-namespace:MorningPod.ViewModels"
+             xmlns:commands="clr-namespace:MorningPod.Commands"
+             xmlns:ultilities="clr-namespace:MorningPod.Ultilities"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance win:ViewModel, IsDesignTimeCreatable=True}" >
+
+    <Grid ClipToBounds="True"
+          >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="60" />
+        </Grid.RowDefinitions>
+        
+        
+        <Rectangle Grid.RowSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="UniformToFill"
+                   Margin="{Binding ElementName=GrTimeLine, Path=ActualWidth, Converter={x:Static ultilities:DoubleToMarginTop.Get}}" 
+                   Fill="{Binding PlayingPodColors, Converter={x:Static ultilities:ColorsToGradientSoft.Get}}">
+        </Rectangle>
+
+
+        <Grid Grid.Row="0" x:Name="GrTimeLine" >
+
+            <ProgressBar x:Name="prog" BorderThickness="0" 
+                         Value="{Binding CurPosi, Mode=TwoWay}"
+                         >
+                <ProgressBar.Background> <SolidColorBrush Color="Black" Opacity="0.7" /> </ProgressBar.Background>
+                <ProgressBar.Foreground> <SolidColorBrush Color="White" Opacity="0.1" /> </ProgressBar.Foreground>
+            </ProgressBar>
+            
+            <TextBlock Text="{Binding PlayingPosi}" HorizontalAlignment="Left" FontSize="55" FontWeight="UltraLight" Foreground="White" Opacity="0.5" IsHitTestVisible="False" VerticalAlignment="Center" Margin="10" TextAlignment="Left" />
+            <TextBlock Text="{Binding PlayingDur}" HorizontalAlignment="Right" FontSize="55" FontWeight="UltraLight" Foreground="White" Opacity="0.5" IsHitTestVisible="False" VerticalAlignment="Center" Margin="10" TextAlignment="Right" />
+            
+            <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="222 0 222 0" ClipToBounds="True" >
+                <Border DockPanel.Dock="Left" BorderThickness="3" BorderBrush="White" Background="White" Margin="15"  IsHitTestVisible="False" Effect="{StaticResource z-depth3}" Visibility="{Binding IsPlaying, Converter={x:Static ultilities:vals.BoolToVis}}" >
+                    <Image Width="33" Height="33" Source="{Binding PlayingPodImgPath}" Stretch="UniformToFill"  IsHitTestVisible="False" />
+                </Border>
+                <TextBlock DockPanel.Dock="Top" Text="{Binding PlayingEpiTitle}" Margin="0 15 0 0" FontSize="16" FontWeight="SemiBold" Foreground="White" Opacity="0.85" IsHitTestVisible="False"  />
+                <TextBlock Text="{Binding PlayingPodTitle}" Foreground="White" Opacity="0.7" IsHitTestVisible="False"  />
+            </DockPanel>
+            
+        </Grid>
+        
+        
+        
+        
+        
+        
+        <Grid Grid.Row="1" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Content="{Binding IsPlaying, Converter={x:Static ultilities:BoolTogglePlayPauseStr.Get}}" FontFamily="{StaticResource Emo}" FontSize="24" BorderThickness="0" Opacity="0.7" 
+                    Command="MediaCommands.TogglePlayPause" />
+            <Button Grid.Column="1" Content="⊲" FontFamily="{StaticResource Emo}" FontSize="38" BorderThickness="0" Opacity="0.7" 
+                    Command="commands:MPCommands.SkipBackward" />
+            <Button Grid.Column="2" Content="⊳" FontFamily="{StaticResource Emo}" FontSize="38" BorderThickness="0" Opacity="0.7" 
+                    Command="commands:MPCommands.SkipForward" />
+            <Button Grid.Column="3" Content="⏮" FontFamily="{StaticResource Emo}" FontSize="28" BorderThickness="0" Opacity="0.7" 
+                    Command="MediaCommands.PreviousTrack" />
+            <Button Grid.Column="4" Content="⏭" FontFamily="{StaticResource Emo}" FontSize="28" BorderThickness="0" Opacity="0.7" 
+                    Command="MediaCommands.NextTrack" />
+
+
+
+            <Grid Grid.Column="5" Background="Black" Opacity="0.5">
+                <ProgressBar Name="vol" Minimum="0" Maximum="1" BorderThickness="0" BorderBrush="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent"
+                             Value="{Binding CurVolume}" />
+                <TextBlock Text="" Foreground="White" Opacity="0.5" FontSize="24" Margin="20 7 0 0" FontFamily="{StaticResource Emo}" HorizontalAlignment="Left" VerticalAlignment="Center" IsHitTestVisible="False" />
+            </Grid>
+
+
+            <Button Grid.Column="6" Grid.ColumnSpan="2" Name="ButtShowLog" BorderThickness="0" Opacity="0.7" FontSize="10" FontFamily="Courier New" Background="DimGray" Foreground="White" HorizontalContentAlignment="Left"
+                    Content="{Binding LastVMLog}" 
+                    Click="ButtShowLog_OnClick" />
+                    <!--Command="commands:MPCommands.ToggleLogs" />-->
+        </Grid>
+        
+        
+        
+        
+        
+    </Grid>
+</UserControl>
+
+
+
+<!--CommandTarget="{Binding ElementName=prog, Path=DataContext}"-->

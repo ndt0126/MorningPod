@@ -1,0 +1,13 @@
+http://www.npr.org/templates/rss/podlayer.php?id=1019
+--
+http://myextralife.com/ftp/radio/currentgeek.xml
+http://www.npr.org/rss/podcast.php?id=510312
+http://feeds.feedburner.com/soundcloud/nAMd
+http://feeds.feedburner.com/DailyTechNewsShow
+http://www.npr.org/rss/podlayer.php?id=1017
+http://www.npr.org/templates/rss/podcast.php?id=510307
+http://feeds.feedburner.com/itsathing/cCoG
+http://www.npr.org/templates/rss/podcast.php?id=510289
+http://www.npr.org/templates/rss/podlayer.php?id=1019
+http://myextralife.com/ftp/radio/morningstream.xml
+http://www.npr.org/rss/podcast.php?id=344098539
