@@ -143,7 +143,7 @@ namespace MorningPod.ViewModels
 
                 foreach (Pod pod in pods)
                 {
-                    if (specPod != null && specPod != PodTotal && specPod != PodDLing && pod != specPod) { Log("notwanted: " , pod.Title); continue; }
+                    if (specPod != null && specPod != PodTotal && specPod != PodDLing && pod != specPod) { /*Log("notwanted: " , pod.Title);*/ continue; }
 
                     if (!force && episOnly && (vals.now - pod.LastUpdate).TotalHours < 1) { Log("skippod: " , pod.LastUpdate); continue; }
 
@@ -248,7 +248,6 @@ namespace MorningPod.ViewModels
             {
                 CurState = State.None; 
                 action?.Invoke();
-                Log("Done PullFeedDatas");
             });
             
 
@@ -290,7 +289,7 @@ namespace MorningPod.ViewModels
                     }
                 }
 
-                Log(" --------------------------------------------- " + "Added to DLQueue: " + CurDLEpis.Count +" ------------------------------------------------------------------------------------------------------------------");
+                Log(" --------------------------------------------- " + "Added to DLQueue: " + (CurDLEpis?.Count??0) +" ------------------------------------------------------------------------------------------------------------------");
             });
         }
 
@@ -498,7 +497,7 @@ namespace MorningPod.ViewModels
         {
             if(_dlWebClient != null && _dlWebClient.IsBusy) { /*Log("_dlWebClient busy");*/ return; }
             if (CurDLEpis == null || CurDLEpis.Count == 0) return; 
-            Log("-------------------------------------- Create New DL ------------------------------------------------------------------------------------------------------------------");
+            Log("--------------------------------------------- Create New DL ------------------------------------------------------------------------------------------------------------------");
             CreateNewDownLoad();
         }
         
@@ -553,10 +552,6 @@ namespace MorningPod.ViewModels
             CurDLEpis.Remove(doneEpi); doneEpi.InQueue = false;
 
 
-            if (CurDLEpis.Count > 0) { CreateNewDownLoad(); PodDLing.Title = "Downloading : " + CurDLEpis.Count; }
-            else { CurDLEpis = null; PodDLing.Title = "Downloading";  }
-
-
             try 
             {
                 doneEpi.Duration = mt.FileDuration(doneEpi.GetLocalPath());
@@ -564,10 +559,18 @@ namespace MorningPod.ViewModels
                 Log("DoneDL:" , doneEpi.LocalFileName);
             } 
             catch (Exception ex) { mt.Log(ex); doneEpi.HasError = true; }
+            
 
+
+            if (CurDLEpis.Count > 0) { CreateNewDownLoad(); PodDLing.Title = "Downloading : " + CurDLEpis.Count; }
+            else { CurDLEpis = null; PodDLing.Title = "Downloading"; }
             
             
             OnDownloadedNewFile?.Invoke(this , new GenericEventArgs());
+
+
+            if (CurDLEpis == null) Log(" --------------------------------------------- DONE ALL DOWNLOADING. ------------------------------------------------------------------------------------------------------------------");
+
 
             return;
             MediaPlayer mp = new MediaPlayer();
